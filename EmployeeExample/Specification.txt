@@ -1,0 +1,6 @@
+﻿Design a web application that an Human Resources (HR) department could use to
+ keep track of employees for a company. It should be designed with United
+ States Internal Revenue Service forms, specifically the W-4 form. Information
+ should include both the employee's work email and phone, as well as personal
+ email and phone. This will only be used by HR members, so no need to limit
+ access at this time.
