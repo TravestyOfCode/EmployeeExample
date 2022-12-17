@@ -66,14 +66,23 @@ namespace EmployeeExample.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id, CancellationToken cancellationToken)
         {
-            var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
-
-            if (entity == null)
+            try
             {
-                return NotFound(id);
-            }
+                var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
 
-            return View(entity);
+                if (entity == null)
+                {
+                    return NotFound(id);
+                }
+
+                return View(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error getting Employee with Id: {id}", id);
+                return StatusCode(500); // ServerError
+            }
+            
         }
 
         [HttpGet]
@@ -128,14 +137,22 @@ namespace EmployeeExample.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
-            var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
-
-            if (entity == null)
+            try
             {
-                return NotFound(id);
-            }
+                var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
 
-            return View(entity);
+                if (entity == null)
+                {
+                    return NotFound(id);
+                }
+
+                return View(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error getting Employee with Id: {id}", id);
+                return StatusCode(500); // ServerError
+            }            
         }
 
         [HttpPost, ActionName(nameof(Delete))]
