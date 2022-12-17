@@ -1,13 +1,16 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeExample.Data
 {
-    [Flags]
     public enum FilingStatus
     {
-        Single = 1,
-        MarriedFilingSeparately = Single,
+        [Display(Name = "Single or Maried Filing Separately")]
+        SingleOrMarriedFilingSeparately = 1,
+
+        [Display(Name = "Married Filing Jointly")]
         MarriedFilingJointly = 2,
-        HeadOfHousehold = 4
+
+        [Display(Name = "Head of Household")]
+        HeadOfHousehold = 3
     };
 }

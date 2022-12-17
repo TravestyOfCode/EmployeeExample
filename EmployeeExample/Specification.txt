@@ -4,3 +4,11 @@
  should include both the employee's work email and phone, as well as personal
  email and phone. This will only be used by HR members, so no need to limit
  access at this time.
+
+Feedback from HR users have some useability improvements they would like to
+ see implemented in the application:
+   1 - Column heading names do not have spaces and are sometimes hard to read.
+   2 - ClaimDependantAndOtherCreditsAmount overlaps the value when viewing the
+        details of an employee.
+   3 - When creating a new employee, Filing Status needs to be input as a
+        number. Would be easier to use a dropdown to select the correct values.
