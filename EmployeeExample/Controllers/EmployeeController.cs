@@ -137,5 +137,31 @@ namespace EmployeeExample.Controllers
 
             return View(entity);
         }
+
+        [HttpPost, ActionName(nameof(Delete))]
+        public async Task<IActionResult> DeletePost(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+
+                if (entity == null)
+                {
+                    return NotFound(id);
+                }
+
+                _dbContext.Employees.Remove(entity);
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error deleting Employee with Id: {id}", id);
+                return StatusCode(500); // ServerError
+            }
+
+        }
     }
 }
