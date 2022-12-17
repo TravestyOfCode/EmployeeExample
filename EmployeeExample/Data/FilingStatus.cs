@@ -4,11 +4,8 @@ namespace EmployeeExample.Data
 {
     public enum FilingStatus
     {
-        [Display(Name = "Single")]
-        Single = 1,
-
-        [Display(Name = "Maried Filing Separately")]
-        MarriedFilingSeparately = Single,
+        [Display(Name = "Single or Maried Filing Separately")]
+        SingleOrMarriedFilingSeparately = 1,
 
         [Display(Name = "Married Filing Jointly")]
         MarriedFilingJointly = 2,
