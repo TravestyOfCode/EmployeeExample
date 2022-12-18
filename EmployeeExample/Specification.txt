@@ -12,3 +12,13 @@ Feedback from HR users have some useability improvements they would like to
         details of an employee.
    3 - When creating a new employee, Filing Status needs to be input as a
         number. Would be easier to use a dropdown to select the correct values.
+
+The business has been growing and there is concern regarding non-HR employees
+  having access to sensitive information. A login should be required in order
+  to view these records. Registration should only be allowed using work email
+  addresses and must be approved by an Administrator. Password requirments
+  include the following rules:
+    1 - Must be at least 8 characters long.
+    2 - Must contain one upper case and one lower case letter.
+    3 - Must include one non-alphabetic character.
+    4 - Must include one numeric character.
