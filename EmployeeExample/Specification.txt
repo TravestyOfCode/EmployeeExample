@@ -1,10 +1,13 @@
-﻿Design a web application that an Human Resources (HR) department could use to
+﻿01-initial-specification:
+Design a web application that an Human Resources (HR) department could use to
  keep track of employees for a company. It should be designed with United
  States Internal Revenue Service forms, specifically the W-4 form. Information
  should include both the employee's work email and phone, as well as personal
  email and phone. This will only be used by HR members, so no need to limit
  access at this time.
 
+
+02-usability-improvements:
 Feedback from HR users have some useability improvements they would like to
  see implemented in the application:
    1 - Column heading names do not have spaces and are sometimes hard to read.
@@ -13,6 +16,7 @@ Feedback from HR users have some useability improvements they would like to
    3 - When creating a new employee, Filing Status needs to be input as a
         number. Would be easier to use a dropdown to select the correct values.
 
+03-security:
 The business has been growing and there is concern regarding non-HR employees
   having access to sensitive information. A login should be required in order
   to view these records. Registration should only be allowed using work email
@@ -23,7 +27,9 @@ The business has been growing and there is concern regarding non-HR employees
     3 - Must include one non-alphabetic character.
     4 - Must include one numeric character.
 
+04-security-useability:
 Administrators would like to have a way to confirm user accounts without having
-  to access the database directly. Please add a user role for Administrators
-  and create a page where they can view/edit registered users and confirm. This
-  area should only allow Administrators access.
+  to access the database directly. A page should be added that allows
+  registered users confirmation status to be updated. This page should only be
+  accessable by users with an Administration role. Normal users should have a
+  User role.
