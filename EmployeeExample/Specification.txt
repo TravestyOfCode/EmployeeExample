@@ -22,3 +22,8 @@ The business has been growing and there is concern regarding non-HR employees
     2 - Must contain one upper case and one lower case letter.
     3 - Must include one non-alphabetic character.
     4 - Must include one numeric character.
+
+Administrators would like to have a way to confirm user accounts without having
+  to access the database directly. Please add a user role for Administrators
+  and create a page where they can view/edit registered users and confirm. This
+  area should only allow Administrators access.
