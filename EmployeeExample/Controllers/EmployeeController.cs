@@ -37,12 +37,14 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, HR")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Create(Employee employee, CancellationToken cancellationToken)
         {
             try
@@ -66,6 +68,7 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Details(int id, CancellationToken cancellationToken)
         {
             try
@@ -88,6 +91,7 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
             try
@@ -109,6 +113,7 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Edit(Employee employee, CancellationToken cancellationToken)
         {
             try
@@ -137,6 +142,7 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
             try
@@ -158,6 +164,7 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpPost, ActionName(nameof(Delete))]
+        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> DeletePost(int id, CancellationToken cancellationToken)
         {
             try
