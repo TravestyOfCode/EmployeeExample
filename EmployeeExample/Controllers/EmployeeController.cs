@@ -89,7 +89,7 @@ namespace EmployeeExample.Controllers
                     return View(entity);
                 }
 
-                return Unauthorized();
+                return Forbid();
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace EmployeeExample.Controllers
                     return View(entity);
                 }
 
-                return Unauthorized();
+                return Forbid();
             }
             catch (Exception ex)
             {
@@ -151,7 +151,7 @@ namespace EmployeeExample.Controllers
                     return BadRequest();
                 }
 
-                return Unauthorized();
+                return Forbid();
             }
             catch (Exception ex)
             {
