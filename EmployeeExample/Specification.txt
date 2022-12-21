@@ -33,3 +33,16 @@ Administrators would like to have a way to confirm user accounts without having
   registered users confirmation status to be updated. This page should only be
   accessable by users with an Administration role. Normal users should have a
   User role.
+
+05-enhanced-security:
+The business would like to open up the employee listing to be available for all
+  employees. But, there is a need to limit access to sensitive information.
+  Regular Users should be able to view the employee list with only the following
+  fields available to view: First Name, Last Name, Work Email, and Work Phone.
+  The User role should not have the ability to create, edit, view details, or
+  delete an employee record. A new role, called HR is to be created that will
+  have full access to the employee listing, along with Create, Edit, Details,
+  and Delete actions. Admin users should also retain full access to everything.
+  In order to prevent regular users from trying to access forbiden areas, only
+  show the Create button and the Edit, Details, and Delete links when the user
+  has permission to access those areas.
