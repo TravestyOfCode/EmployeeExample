@@ -1,9 +1,13 @@
 ﻿using EmployeeExample.Data;
+using EmployeeExample.Models.ViewModels.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,8 +30,8 @@ namespace EmployeeExample.Controllers
         public async Task<IActionResult> Index(CancellationToken cancellationToken)
         {
             try
-            {
-                return View(await _dbContext.Employees.ToListAsync(cancellationToken));
+            {                
+                return View(await GetEmployees(User, cancellationToken));
             }
             catch (Exception ex)
             {
@@ -189,5 +193,28 @@ namespace EmployeeExample.Controllers
             }
 
         }
+
+        /// <summary>
+        /// Gets a list of Employees from the database, including if the current user
+        /// is allowed to view details, edit, and delete each record.
+        /// </summary>
+        /// <param name="user">The current user requesting the list.</param>
+        /// <returns>A List of Employees mapped to the IndexViewModel model.</returns>
+        private async Task<List<IndexViewModel>> GetEmployees(ClaimsPrincipal user, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Employees
+                .Select(p => new IndexViewModel()
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    WorkEmail = p.WorkEmail,
+                    WorkPhone = p.WorkPhone,
+                    CanEdit = User.Identity.Name.Equals(p.WorkEmail, StringComparison.CurrentCultureIgnoreCase) || User.IsInRole("Admin") || User.IsInRole("HR"),
+                    CanDelete = User.IsInRole("Admin") || User.IsInRole("HR")
+                })
+                .ToListAsync(cancellationToken);
+        }
+
     }
 }
