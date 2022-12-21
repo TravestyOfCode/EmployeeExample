@@ -71,12 +71,11 @@ namespace EmployeeExample.Controllers
             }
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin, HR")]
+        [HttpGet]        
         public async Task<IActionResult> Details(int id, CancellationToken cancellationToken)
         {
             try
-            {
+            {                
                 var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
 
                 if (entity == null)
@@ -84,7 +83,13 @@ namespace EmployeeExample.Controllers
                     return NotFound(id);
                 }
 
-                return View(entity);
+                // Check if the user is able to view the details of the requested employee
+                if (User.IsInRole("Admin") || User.IsInRole("HR") || User.Identity.Name.Equals(entity.WorkEmail, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return View(entity);
+                }
+
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -95,7 +100,6 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken)
         {
             try
@@ -107,7 +111,13 @@ namespace EmployeeExample.Controllers
                     return NotFound(id);
                 }
 
-                return View(entity);
+                // Check if the user is able to edit the details of the requested employee
+                if (User.IsInRole("Admin") || User.IsInRole("HR") || User.Identity.Name.Equals(entity.WorkEmail, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return View(entity);
+                }
+
+                return Unauthorized();
             }
             catch (Exception ex)
             {
@@ -117,7 +127,6 @@ namespace EmployeeExample.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin, HR")]
         public async Task<IActionResult> Edit(Employee employee, CancellationToken cancellationToken)
         {
             try
@@ -129,14 +138,20 @@ namespace EmployeeExample.Controllers
                     return NotFound(employee.Id);
                 }
 
-                if (await TryUpdateModelAsync(entity))
+                // Check if the user is able to edit the details of the requested employee
+                if (User.IsInRole("Admin") || User.IsInRole("HR") || User.Identity.Name.Equals(entity.WorkEmail, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    await _dbContext.SaveChangesAsync(cancellationToken);
+                    if (await TryUpdateModelAsync(entity))
+                    {
+                        await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(Index));
+                    }
+
+                    return BadRequest();
                 }
 
-                return BadRequest();
+                return Unauthorized();
             }
             catch (Exception ex)
             {
