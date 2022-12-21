@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EmployeeExample.Data.Employee>
+﻿@model IEnumerable<EmployeeExample.Models.ViewModels.Employee.IndexViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -42,14 +42,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.WorkPhone)
             </td>       
-            @if (User.IsInRole("Admin") || User.IsInRole("HR"))
-            {
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @if (item.CanEdit)
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> @:|
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> @if(item.CanDelete) { <text>|</text> }
+                }
+                @if (item.CanDelete)
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
             </td>
-            }
         </tr>
 }
     </tbody>
