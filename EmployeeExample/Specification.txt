@@ -46,3 +46,10 @@ The business would like to open up the employee listing to be available for all
   In order to prevent regular users from trying to access forbiden areas, only
   show the Create button and the Edit, Details, and Delete links when the user
   has permission to access those areas.
+
+06-user-editing:
+HR would like to give the users the ability to edit their own infomration from
+  the website. A user should be able to view and edit their own details. A
+  user is considered the same employee if the work email matches the login
+  email address used. The user should NOT be able to change the work email
+  address or work phone number.
