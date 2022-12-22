@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +30,7 @@ namespace EmployeeExample.Controllers
         {
             try
             {                
-                return View(await GetEmployees(User, cancellationToken));
+                return View(await GetEmployees(cancellationToken));
             }
             catch (Exception ex)
             {
@@ -104,7 +103,7 @@ namespace EmployeeExample.Controllers
         {
             try
             {
-                var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+                var entity = await GetEmployeeByIdAsEditViewModel(id, cancellationToken);
 
                 if (entity == null)
                 {
@@ -131,6 +130,11 @@ namespace EmployeeExample.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)
+                {
+                    return View();
+                }
+
                 var entity = await _dbContext.Employees.SingleOrDefaultAsync(p => p.Id.Equals(employee.Id), cancellationToken);
 
                 if (entity == null)
@@ -141,14 +145,11 @@ namespace EmployeeExample.Controllers
                 // Check if the user is able to edit the details of the requested employee
                 if (User.IsInRole("Admin") || User.IsInRole("HR") || User.Identity.Name.Equals(entity.WorkEmail, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (await TryUpdateModelAsync(entity))
-                    {
-                        await _dbContext.SaveChangesAsync(cancellationToken);
+                    UpdateEmployee(employee, entity);
 
-                        return RedirectToAction(nameof(Index));
-                    }
+                    await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    return BadRequest();
+                    return RedirectToAction(nameof(Index));
                 }
 
                 return Forbid();
@@ -213,9 +214,9 @@ namespace EmployeeExample.Controllers
         /// Gets a list of Employees from the database, including if the current user
         /// is allowed to view details, edit, and delete each record.
         /// </summary>
-        /// <param name="user">The current user requesting the list.</param>
+        /// <param name="cancellationToken">A CacellationToken to observe while waiting for the task to complete.</param>
         /// <returns>A List of Employees mapped to the IndexViewModel model.</returns>
-        private async Task<List<IndexViewModel>> GetEmployees(ClaimsPrincipal user, CancellationToken cancellationToken)
+        private async Task<List<IndexViewModel>> GetEmployees(CancellationToken cancellationToken)
         {
             return await _dbContext.Employees
                 .Select(p => new IndexViewModel()
@@ -229,6 +230,85 @@ namespace EmployeeExample.Controllers
                     CanDelete = User.IsInRole("Admin") || User.IsInRole("HR")
                 })
                 .ToListAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets a single Employee from the database, including if the current user
+        /// is allowed to edit the work email or work phone number.
+        /// </summary>
+        /// <param name="id">The id of the requested Employee record.</param>
+        /// <param name="cancellationToken">A CacellationToken to observe while waiting for the task to complete.</param>
+        /// <returns></returns>
+        private async Task<EditViewModel> GetEmployeeByIdAsEditViewModel(int id, CancellationToken cancellationToken)
+        {
+            return await _dbContext.Employees
+                    .Select(p => new EditViewModel()
+                    {
+                        Id = p.Id,
+                        FirstName = p.FirstName,
+                        MiddleName = p.MiddleName,
+                        LastName = p.LastName,
+                        Address = p.Address,
+                        City = p.City,
+                        State = p.State,
+                        ZipCode = p.ZipCode,
+                        WorkEmail = p.WorkEmail,
+                        WorkPhone = p.WorkPhone,
+                        PersonalEmail = p.PersonalEmail,
+                        PersonalPhone = p.PersonalPhone,
+                        SocialSecurityNumber = p.SocialSecurityNumber,
+                        FilingStatus = p.FilingStatus,
+                        HasTwoJobs = p.HasTwoJobs,
+                        ClaimDependantAndOtherCreditsAmount = p.ClaimDependantAndOtherCreditsAmount,
+                        OtherIncomeAmount = p.OtherIncomeAmount,
+                        DeductionAmount = p.DeductionAmount,
+                        ExtraWitholdingAmount = p.ExtraWitholdingAmount,
+                        CanEditWorkEmail = User.IsInRole("Admin") || User.IsInRole("HR"),
+                        CanEditWorkPhone = User.IsInRole("Admin") || User.IsInRole("HR")
+                    })
+                    .SingleOrDefaultAsync(p => p.Id.Equals(id), cancellationToken);
+        }
+
+        /// <summary>
+        /// Updates the second Employee model using the values from the first Employee model, ensuring
+        /// that restricted fields due to security permissions are not updated.
+        /// </summary>
+        /// <param name="employee">The Employee to use values from.</param>
+        /// <param name="entity">The Employee to update.</param>
+        private void UpdateEmployee(Employee employee, Employee entity)
+        {
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee));
+            }
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            entity.Address = employee.Address;
+            entity.City = employee.City;
+            entity.ClaimDependantAndOtherCreditsAmount = employee.ClaimDependantAndOtherCreditsAmount;
+            entity.DeductionAmount = employee.DeductionAmount;
+            entity.ExtraWitholdingAmount = employee.ExtraWitholdingAmount;
+            entity.FilingStatus = employee.FilingStatus;
+            entity.FirstName = employee.FirstName;
+            entity.HasTwoJobs = employee.HasTwoJobs;
+            entity.LastName = employee.LastName;
+            entity.MiddleName = employee.MiddleName;
+            entity.OtherIncomeAmount = employee.OtherIncomeAmount;
+            entity.PersonalEmail = employee.PersonalEmail;
+            entity.PersonalPhone = employee.PersonalPhone;
+            entity.SocialSecurityNumber = employee.SocialSecurityNumber;
+            entity.State = employee.State;
+            entity.ZipCode = employee.ZipCode;
+
+            if (User.IsInRole("Admin") || User.IsInRole("HR"))
+            {
+                entity.WorkEmail = employee.WorkEmail;
+                entity.WorkPhone = employee.WorkPhone;
+            }
         }
 
     }
